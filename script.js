@@ -1,18 +1,18 @@
-// Create button for city
+// define varables for user to enter desired city
 var cityList = [];
 var id = "5859ec0dbfd9ff0a36abca355158892e";
-// Store searched cities in local storage
+// function will store cities the user searched for in local storage
 function storeCities() {
     localStorage.setItem("cities", JSON.stringify(cityList));
 }
-// Add city to searched city list
+// function will add city to searched city list entered by user
 function createCityList(){
     $(".cityList").empty();
     cityList.forEach(function(city) {
         $(".cityList").prepend($(`<button class="list-group-item list-group-item-action cityButton" data-city="${city}">${city}</button>`));
     })
 }
-// loads cityList from local storage and calls api to get data for last searched city if it exists
+// function loads cityList from local storage and calls the api to get data for last searched city if it exists
 function init() {
     var storedCities = JSON.parse(localStorage.getItem("cities"));
     if (storedCities !== null) {
@@ -25,7 +25,7 @@ function init() {
         getForecast(thisCity, id);
     }
 }
-// gets current forecast for selected city and calls uv index function
+// function fetches current forecast for selected city and calls uv index function using ajax GET Method
 function getCurrentWeather(thisCity, id) {
     var weatherURL = `https://api.openweathermap.org/data/2.5/weather?q=${thisCity}&units=imperial&appid=${id}`;
     var cityLat;
@@ -48,7 +48,8 @@ function getCurrentWeather(thisCity, id) {
         getUVI(id, cityLat, cityLong);
     })
 }
-// gets 5 day forecast for selected city
+// fethches 5 day forecast for selected city, using ajax GET Method
+
 function getForecast(thisCity, id) {
     var forecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${thisCity}&units=imperial&appid=${id}`;
     $.ajax({
@@ -74,7 +75,7 @@ function getForecast(thisCity, id) {
         }
     })
 }
-// called within getCurrentWeather() to get uv index for selected city
+// called within getCurrentWeather() to get uv index for selected city using ajax GET Method
 function getUVI(id, cityLat, cityLong) {
     var uvURL = `https://api.openweathermap.org/data/2.5/uvi?lat=${cityLat}&lon=${cityLong}&appid=${id}`;
     $.ajax({
@@ -97,7 +98,6 @@ init();
 // submit event that loads new data
 $("form").on("submit", function(event) {
     event.preventDefault();
-    console.log("i work")
     var newCity = $("#citySearchInput").val().trim();
     cityList.push(newCity);
     createCityList();
